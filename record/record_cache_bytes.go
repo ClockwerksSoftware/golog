@@ -25,3 +25,5 @@ func (rbc *recordByteCache) GetCacheFormat(formatName string) ([]byte, error) {
 		formatName,
 	)
 }
+
+var _ interfaces.RecordFormatByteCache = &recordByteCache{}

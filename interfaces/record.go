@@ -9,11 +9,19 @@ var (
 	ErrNoCachedRecord = errors.New("no cached log record")
 )
 
-type RecordFormatCache interface {
+type RecordFormatByteCache interface {
 	CacheFormat(formatName string, formattedRecord []byte)
-	CacheFormatString(formatName string, formattedRecord string)
 	GetCacheFormat(formatName string) ([]byte, error)
+}
+
+type RecordFormatStringCache interface {
+	CacheFormatString(formatName string, formattedRecord string)
 	GetCacheFormatString(formatName string) (string, error)
+}
+
+type RecordFormatCache interface {
+	RecordFormatByteCache
+	RecordFormatStringCache
 }
 
 type Record interface {

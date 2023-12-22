@@ -4,6 +4,8 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/barkimedes/go-deepcopy"
+
 	"github.com/ClockwerksSoftware/golog/interfaces"
 )
 
@@ -35,9 +37,13 @@ func NewLogRecord(name string, level LogLevelInt, message string, args ...any) i
 			level: level,
 		},
 		message:     message,
-		messageArgs: args,
+		messageArgs: make([]any, 0),
 		attrs:       make([]interfaces.Attribute, 0),
 		datetime:    time.Now().UTC(),
+	}
+	if len(args) > 0 {
+		vCopy := deepcopy.MustAnything(args).([]any)
+		lr.messageArgs = append(lr.messageArgs, vCopy...)
 	}
 	_, lr.location.filename, lr.location.line, lr.location.ok = runtime.Caller(logRecordCallerDepth)
 	// retrieve the stack associated with the log record
@@ -73,7 +79,21 @@ func (lr *logRecord) Time() time.Time {
 }
 
 func (lr *logRecord) AddAttributes(attr ...interfaces.Attribute) {
-	lr.attrs = append(lr.attrs, attr...)
+	// it would have been great if `deepcopy.MustAnything` would work
+	// on the `Attribute` type; however, when calling it `attr[n]` it
+	// returns an uninitialized copy. This unfortunately means that
+	// a little time needs to be wasted to properly copy the `Attributes`
+	attr_copy := make([]interfaces.Attribute, 0)
+	for _, v := range attr {
+		attr_copy = append(
+			attr_copy,
+			NewLogAttr(
+				v.Key(),
+				deepcopy.MustAnything(v.Value()).(any),
+			),
+		)
+	}
+	lr.attrs = append(lr.attrs, attr_copy...)
 }
 
 func (lr *logRecord) Attributes() []interfaces.Attribute {

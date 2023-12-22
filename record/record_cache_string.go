@@ -25,3 +25,5 @@ func (rsc *recordStringCache) GetCacheFormatString(formatName string) (string, e
 		formatName,
 	)
 }
+
+var _ interfaces.RecordFormatStringCache = &recordStringCache{}

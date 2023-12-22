@@ -11,6 +11,13 @@ type LogAttr struct {
 	value any
 }
 
+func NewLogAttr(key string, value any) interfaces.Attribute {
+	return &LogAttr{
+		key: key,
+		value: value,
+	}
+}
+
 func (la *LogAttr) Key() string {
 	return la.key
 }
