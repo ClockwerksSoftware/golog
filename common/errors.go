@@ -1,10 +1,10 @@
 package common
 
 import (
-    "errors"
+	"errors"
 )
 
 var (
-    ErrLogLevelUnknown = errors.New("Unknown Log Level")
-    ErrLogLevelAlreadyExists = errors.New("Log Level Already Exists")
+	ErrLogLevelUnknown       = errors.New("Unknown Log Level")
+	ErrLogLevelAlreadyExists = errors.New("Log Level Already Exists")
 )

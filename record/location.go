@@ -1,47 +1,47 @@
 package record
 
 import (
-    "github.com/ClockwerksSoftware/golog/interfaces"
+	"github.com/ClockwerksSoftware/golog/interfaces"
 )
 
 type LogRecordLocation struct {
-    filename string
-    line int
-    ok bool
-    stack string
+	filename string
+	line     int
+	ok       bool
+	stack    string
 }
 
 func NewLogRecordLocation() interfaces.RecordLocation {
-    return &LogRecordLocation{}
+	return &LogRecordLocation{}
 }
 
 func (lrl *LogRecordLocation) SetFilename(f string) {
-    lrl.filename = f
+	lrl.filename = f
 }
 
 func (lrl *LogRecordLocation) Filename() string {
-    return lrl.filename
+	return lrl.filename
 }
 
 func (lrl *LogRecordLocation) SetLine(n int) {
-    lrl.line = n
+	lrl.line = n
 }
 func (lrl *LogRecordLocation) Line() int {
-    return lrl.line
+	return lrl.line
 }
 
 func (lrl *LogRecordLocation) SetValid(v bool) {
-    lrl.ok = v
+	lrl.ok = v
 }
 func (lrl *LogRecordLocation) Valid() bool {
-    return lrl.ok
+	return lrl.ok
 }
 
 func (lrl *LogRecordLocation) SetStack(s string) {
-    lrl.stack = s
+	lrl.stack = s
 }
 func (lrl *LogRecordLocation) Stack() string {
-    return lrl.stack
+	return lrl.stack
 }
 
 var _ interfaces.RecordLocation = &LogRecordLocation{}

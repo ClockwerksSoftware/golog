@@ -1,26 +1,31 @@
 package interfaces
 
 import (
-    "time"
+	"errors"
+	"time"
+)
+
+var (
+	ErrNoCachedRecord = errors.New("no cached log record")
 )
 
 type RecordFormatCache interface {
-    CacheFormat(formatName string, formattedRecord []byte)
-    CacheFormatString(formatName string, formattedRecord string)
-    GetCacheFormat(formatName string) []byte
-    GetCacheFormatString(formatName string) string
+	CacheFormat(formatName string, formattedRecord []byte)
+	CacheFormatString(formatName string, formattedRecord string)
+	GetCacheFormat(formatName string) ([]byte, error)
+	GetCacheFormatString(formatName string) (string, error)
 }
 
 type Record interface {
-    RecordFormatCache
+	RecordFormatCache
 
-    Location() RecordLocation
-    Name() string
-    Level() Level
-    RawMessage() string
-    RawMessageArgs() []any
-    Time() time.Time
+	Location() RecordLocation
+	Name() string
+	Level() Level
+	RawMessage() string
+	RawMessageArgs() []any
+	Time() time.Time
 
-    AddAttributes(attr ...Attribute)
-    Attributes() []Attribute
+	AddAttributes(attr ...Attribute)
+	Attributes() []Attribute
 }
