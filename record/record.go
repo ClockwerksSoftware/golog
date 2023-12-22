@@ -1,7 +1,6 @@
 package record
 
 import (
-	"fmt"
 	"runtime"
 	"time"
 
@@ -9,10 +8,16 @@ import (
 )
 
 const (
+	// normal operation means this is called through a log function
+	// and thereby is a couple layers removed from the call that
+	// needs to be trapped
 	logRecordCallerDepth = 2
 )
 
 type logRecord struct {
+	recordByteCache
+	recordStringCache
+
 	location    LogRecordLocation
 	name        string
 	level       interfaces.Level
@@ -21,8 +26,6 @@ type logRecord struct {
 	attrs       []interfaces.Attribute
 	datetime    time.Time
 
-	cacheBytes  map[string][]byte
-	cacheString map[string]string
 }
 
 func NewLogRecord(name string, level LogLevelInt, message string, args ...any) interfaces.Record {
@@ -75,36 +78,6 @@ func (lr *logRecord) AddAttributes(attr ...interfaces.Attribute) {
 
 func (lr *logRecord) Attributes() []interfaces.Attribute {
 	return lr.attrs
-}
-
-func (lr *logRecord) CacheFormat(formatName string, formattedRecord []byte) {
-	lr.cacheBytes[formatName] = formattedRecord
-}
-func (lr *logRecord) GetCacheFormat(formatName string) ([]byte, error) {
-	if v, ok := lr.cacheBytes[formatName]; ok {
-		return v, nil
-	}
-
-	return nil, fmt.Errorf(
-		"%w: no cached record with name %q",
-		interfaces.ErrNoCachedRecord,
-		formatName,
-	)
-}
-
-func (lr *logRecord) CacheFormatString(formatName string, formattedRecord string) {
-	lr.cacheString[formatName] = formattedRecord
-}
-func (lr *logRecord) GetCacheFormatString(formatName string) (string, error) {
-	if v, ok := lr.cacheString[formatName]; ok {
-		return v, nil
-	}
-
-	return "", fmt.Errorf(
-		"%w: no cached record with name %q",
-		interfaces.ErrNoCachedRecord,
-		formatName,
-	)
 }
 
 var _ interfaces.Record = &logRecord{}
