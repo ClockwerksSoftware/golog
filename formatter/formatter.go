@@ -19,13 +19,17 @@ const (
 )
 */
 
+const (
+	basicFormatterName = "LogFormatterBasic"
+)
+
 type logFormatter struct {
 	name string
 }
 
 func NewLogFormatter() interfaces.Formatter {
 	return &logFormatter{
-		name: "LogFormatterBasic",
+		name: basicFormatterName,
 	}
 }
 
