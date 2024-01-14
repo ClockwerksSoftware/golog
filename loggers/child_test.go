@@ -9,7 +9,7 @@ import (
 	"github.com/ClockwerksSoftware/golog/record"
 )
 
-func TestCoreLogger(t *testing.T) {
+func TestChildLogger(t *testing.T) {
 	t.Run(
 		"construct",
 		func(t *testing.T) {
@@ -19,15 +19,13 @@ func TestCoreLogger(t *testing.T) {
 				handlers: make([]interfaces.Handler, 0),
 				childLoggers: make(map[string]interfaces.Log),
 			}
+			ccl := NewChildLogger(expectedName, cl).(*childLogger)
 
-			if cl.Name() != expectedName {
+			if ccl.Name() != expectedName {
 				t.Errorf("Unexpected `name` received: %q != %q", cl.Name(), expectedName)
 			}
-			if len(cl.handlers) != 0 {
-				t.Errorf("Unexpected handlers found: %#v", cl.handlers)
-			}
-			if len(cl.childLoggers) != 0 {
-				t.Errorf("Unexpected child loggers found: %#v", cl.childLoggers)
+			if ccl.root != cl {
+				t.Errorf("Unexpected root found: %#v != %#v", ccl.root, cl)
 			}
 		},
 	)
@@ -36,7 +34,7 @@ func TestCoreLogger(t *testing.T) {
 		func(t *testing.T) {
 			type TestScenarioParameters struct {
 				beginFn func(t *testing.T)
-				doFn func(t *testing.T, cl *coreLogger)
+				doFn func(t *testing.T, cl *childLogger)
 				expectFn func(t *testing.T, output string)
 			}
 			type TestScenario struct {
@@ -50,7 +48,7 @@ func TestCoreLogger(t *testing.T) {
 						msg := "some message"
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Info(msg)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -69,7 +67,7 @@ func TestCoreLogger(t *testing.T) {
 						expectedMsg := fmt.Sprintf(msg, args...)
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Infof(msg, args...)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -86,7 +84,7 @@ func TestCoreLogger(t *testing.T) {
 						msg := "warn some message"
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Warning(msg)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -105,7 +103,7 @@ func TestCoreLogger(t *testing.T) {
 						expectedMsg := fmt.Sprintf(msg, args...)
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Warningf(msg, args...)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -122,7 +120,7 @@ func TestCoreLogger(t *testing.T) {
 						msg := "error some message"
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Error(msg)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -141,7 +139,7 @@ func TestCoreLogger(t *testing.T) {
 						expectedMsg := fmt.Sprintf(msg, args...)
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Errorf(msg, args...)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -158,7 +156,7 @@ func TestCoreLogger(t *testing.T) {
 						msg := "debug some message"
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Debug(msg)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -177,7 +175,7 @@ func TestCoreLogger(t *testing.T) {
 						expectedMsg := fmt.Sprintf(msg, args...)
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Debugf(msg, args...)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -194,7 +192,7 @@ func TestCoreLogger(t *testing.T) {
 						msg := "critical some message"
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Critical(msg)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -213,7 +211,7 @@ func TestCoreLogger(t *testing.T) {
 						expectedMsg := fmt.Sprintf(msg, args...)
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Criticalf(msg, args...)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -230,7 +228,7 @@ func TestCoreLogger(t *testing.T) {
 						msg := "log some message"
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Log(record.GetLogLevel(record.DEBUG), msg)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -249,7 +247,7 @@ func TestCoreLogger(t *testing.T) {
 						expectedMsg := fmt.Sprintf(msg, args...)
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								cl.Logf(record.GetLogLevel(record.ERROR), msg, args...)
 							},
 							expectFn: func(t *testing.T, output string) {
@@ -268,7 +266,7 @@ func TestCoreLogger(t *testing.T) {
 						expectedMsg := fmt.Sprintf(msg, args...)
 						return TestScenarioParameters{
 							beginFn: func(t *testing.T) {},
-							doFn: func(t *testing.T, cl *coreLogger) {
+							doFn: func(t *testing.T, cl *childLogger) {
 								r := record.NewLogRecord("foo", record.DEBUG, msg, args...)
 								cl.ProcessRecord(r)
 							},
@@ -292,16 +290,36 @@ func TestCoreLogger(t *testing.T) {
 							handlers: make([]interfaces.Handler, 0),
 							childLoggers: make(map[string]interfaces.Log),
 						}
+						ccl := NewChildLogger(t.Name(), cl).(*childLogger)
 						mh := internal.NewMockHandler(t.Name())
 						cl.AddHandler(mh)
 
 						parameters := scenario.setupFn(t)
 
 						parameters.beginFn(t)
-						parameters.doFn(t, cl)
+						parameters.doFn(t, ccl)
 						parameters.expectFn(t, mh.Buffer.String())
 					},
 				)
+			}
+		},
+	)
+	t.Run(
+		"addHandler",
+		func(t *testing.T) {
+			cl := &coreLogger{
+				name:  t.Name(),
+				handlers: make([]interfaces.Handler, 0),
+				childLoggers: make(map[string]interfaces.Log),
+			}
+			ccl := NewChildLogger(t.Name(), cl).(*childLogger)
+			mh := internal.NewMockHandler(t.Name())
+			if len(cl.handlers) != 0 {
+				t.Errorf("Unexpected handler found: %#v", cl.handlers)
+			}
+			ccl.AddHandler(mh)
+			if len(cl.handlers) != 1 {
+				t.Errorf("Unexpected handlers found: (len != 1) - %#v", cl.handlers)
 			}
 		},
 	)
