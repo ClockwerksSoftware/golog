@@ -14,10 +14,10 @@ type LogLevel struct {
 
 const (
 	CRITICAL LogLevelInt = 0
-	DEBUG                = 30
-	ERROR                = 50
-	WARNING              = 70
-	INFO                 = 90
+	DEBUG    LogLevelInt = 30
+	ERROR    LogLevelInt = 50
+	WARNING  LogLevelInt = 70
+	INFO     LogLevelInt = 90
 )
 
 var (

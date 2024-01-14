@@ -57,7 +57,7 @@ func (ljf *logJsonFormatter) Format(r interfaces.Record) []byte {
 	}
 
 	// TODO: replace the JSON parser
-	jsonByteData, err := json.Marshal(jsonAttributes)
+	jsonByteData, _ := json.Marshal(jsonAttributes)
 	r.CacheFormat(ljf.name, jsonByteData)
 	return jsonByteData
 }

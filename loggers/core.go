@@ -16,28 +16,52 @@ type coreLogger struct {
 func (lc *coreLogger) Name() string {
 	return lc.name
 }
-func (lc *coreLogger) Info(msg string, args ...any) {
-	r := record.NewLogRecord(rootLoggerName, record.INFO, msg, args...)
+func (lc *coreLogger) Info(msg string) {
+	r := record.NewLogRecord(rootLoggerName, record.INFO, msg)
 	lc.sendRecord(r)
 }
-func (lc *coreLogger) Warning(msg string, args ...any) {
-	r := record.NewLogRecord(rootLoggerName, record.WARNING, msg, args...)
+func (lc *coreLogger) Infof(format string, args ...any) {
+	r := record.NewLogRecord(rootLoggerName, record.INFO, format, args...)
 	lc.sendRecord(r)
 }
-func (lc *coreLogger) Error(msg string, args ...any) {
-	r := record.NewLogRecord(rootLoggerName, record.ERROR, msg, args...)
+func (lc *coreLogger) Warning(msg string) {
+	r := record.NewLogRecord(rootLoggerName, record.WARNING, msg)
 	lc.sendRecord(r)
 }
-func (lc *coreLogger) Debug(msg string, args ...any) {
-	r := record.NewLogRecord(rootLoggerName, record.DEBUG, msg, args...)
+func (lc *coreLogger) Warningf(format string, args ...any) {
+	r := record.NewLogRecord(rootLoggerName, record.WARNING, format, args...)
 	lc.sendRecord(r)
 }
-func (lc *coreLogger) Critical(msg string, args ...any) {
-	r := record.NewLogRecord(rootLoggerName, record.CRITICAL, msg, args...)
+func (lc *coreLogger) Error(msg string) {
+	r := record.NewLogRecord(rootLoggerName, record.ERROR, msg)
 	lc.sendRecord(r)
 }
-func (lc *coreLogger) Log(l interfaces.Level, msg string, args ...any) {
-	r := record.NewLogRecord(rootLoggerName, record.LogLevelInt(l.Int()), msg, args...)
+func (lc *coreLogger) Errorf(format string, args ...any) {
+	r := record.NewLogRecord(rootLoggerName, record.ERROR, format, args...)
+	lc.sendRecord(r)
+}
+func (lc *coreLogger) Debug(msg string) {
+	r := record.NewLogRecord(rootLoggerName, record.DEBUG, msg)
+	lc.sendRecord(r)
+}
+func (lc *coreLogger) Debugf(format string, args ...any) {
+	r := record.NewLogRecord(rootLoggerName, record.DEBUG, format, args...)
+	lc.sendRecord(r)
+}
+func (lc *coreLogger) Critical(msg string) {
+	r := record.NewLogRecord(rootLoggerName, record.CRITICAL, msg)
+	lc.sendRecord(r)
+}
+func (lc *coreLogger) Criticalf(format string, args ...any) {
+	r := record.NewLogRecord(rootLoggerName, record.CRITICAL, format, args...)
+	lc.sendRecord(r)
+}
+func (lc *coreLogger) Log(l interfaces.Level, msg string) {
+	r := record.NewLogRecord(rootLoggerName, record.LogLevelInt(l.Int()), msg)
+	lc.sendRecord(r)
+}
+func (lc *coreLogger) Logf(l interfaces.Level, format string, args ...any) {
+	r := record.NewLogRecord(rootLoggerName, record.LogLevelInt(l.Int()), format, args...)
 	lc.sendRecord(r)
 }
 

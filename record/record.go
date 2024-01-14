@@ -89,7 +89,7 @@ func (lr *logRecord) AddAttributes(attr ...interfaces.Attribute) {
 			attr_copy,
 			NewLogAttr(
 				v.Key(),
-				deepcopy.MustAnything(v.Value()).(any),
+				deepcopy.MustAnything(v.Value()),
 			),
 		)
 	}

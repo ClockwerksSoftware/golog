@@ -38,7 +38,7 @@ func TestLogLevel(t *testing.T) {
 			l := &LogLevel{
 				level: LogLevelInt(desiredLogLevel),
 			}
-			if l.Int() != desiredLogLevel {
+			if l.Int() != int(desiredLogLevel) {
 				t.Logf("Unexpected log level found: %d != %d", l.level, desiredLogLevel)
 			}
 		},

@@ -90,7 +90,7 @@ func (lh *logHandler) Handle(r interfaces.Record) {
 		formattedOutput = []byte(
 			fmt.Sprintf(
 				r.RawMessage(),
-				r.RawMessageArgs(),
+				r.RawMessageArgs()...,
 			),
 		)
 	}

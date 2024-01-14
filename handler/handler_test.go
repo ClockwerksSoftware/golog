@@ -192,7 +192,7 @@ func TestHandler(t *testing.T) {
 					lh.SetFormatter(nil)
 
 					lr := internal.NewMockRecord()
-					lr.MockRawMessage = "raw formatter - %#v"
+					lr.MockRawMessage = "raw formatter - %s %s %s"
 					lr.MockRawMessageArgs = []any{
 						"raw",
 						"message",
@@ -200,7 +200,7 @@ func TestHandler(t *testing.T) {
 					}
 
 					lh.Handle(lr)
-					expectedOutput := "raw formatter - []interface {}{\"raw\", \"message\", \"args\"}"
+					expectedOutput := "raw formatter - raw message args"
 					out := lhOutput.String()
 					if out != expectedOutput {
 						t.Errorf("Unexpected output received: %q != %q", out, expectedOutput)

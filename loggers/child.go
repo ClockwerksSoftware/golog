@@ -24,28 +24,52 @@ func NewChildLogger(name string, root interfaces.Log) interfaces.Log {
 func (cl *childLogger) Name() string {
 	return cl.name
 }
-func (cl *childLogger) Info(msg string, args ...any) {
-	r := record.NewLogRecord(cl.name, record.INFO, msg, args...)
+func (cl *childLogger) Info(msg string) {
+	r := record.NewLogRecord(cl.name, record.INFO, msg)
 	cl.sendRecord(r)
 }
-func (cl *childLogger) Warning(msg string, args ...any) {
-	r := record.NewLogRecord(cl.name, record.WARNING, msg, args...)
+func (cl *childLogger) Infof(format string, args ...any) {
+	r := record.NewLogRecord(cl.name, record.INFO, format, args...)
 	cl.sendRecord(r)
 }
-func (cl *childLogger) Error(msg string, args ...any) {
-	r := record.NewLogRecord(cl.name, record.ERROR, msg, args...)
+func (cl *childLogger) Warning(msg string) {
+	r := record.NewLogRecord(cl.name, record.WARNING, msg)
 	cl.sendRecord(r)
 }
-func (cl *childLogger) Debug(msg string, args ...any) {
-	r := record.NewLogRecord(cl.name, record.DEBUG, msg, args...)
+func (cl *childLogger) Warningf(format string, args ...any) {
+	r := record.NewLogRecord(cl.name, record.WARNING, format, args...)
 	cl.sendRecord(r)
 }
-func (cl *childLogger) Critical(msg string, args ...any) {
-	r := record.NewLogRecord(cl.name, record.CRITICAL, msg, args...)
+func (cl *childLogger) Error(msg string) {
+	r := record.NewLogRecord(cl.name, record.ERROR, msg)
 	cl.sendRecord(r)
 }
-func (cl *childLogger) Log(l interfaces.Level, msg string, args ...any) {
-	r := record.NewLogRecord(cl.name, record.LogLevelInt(l.Int()), msg, args...)
+func (cl *childLogger) Errorf(format string, args ...any) {
+	r := record.NewLogRecord(cl.name, record.ERROR, format, args...)
+	cl.sendRecord(r)
+}
+func (cl *childLogger) Debug(msg string) {
+	r := record.NewLogRecord(cl.name, record.DEBUG, msg)
+	cl.sendRecord(r)
+}
+func (cl *childLogger) Debugf(format string, args ...any) {
+	r := record.NewLogRecord(cl.name, record.DEBUG, format, args...)
+	cl.sendRecord(r)
+}
+func (cl *childLogger) Critical(msg string) {
+	r := record.NewLogRecord(cl.name, record.CRITICAL, msg)
+	cl.sendRecord(r)
+}
+func (cl *childLogger) Criticalf(format string, args ...any) {
+	r := record.NewLogRecord(cl.name, record.CRITICAL, format, args...)
+	cl.sendRecord(r)
+}
+func (cl *childLogger) Log(l interfaces.Level, msg string) {
+	r := record.NewLogRecord(cl.name, record.LogLevelInt(l.Int()), msg)
+	cl.sendRecord(r)
+}
+func (cl *childLogger) Logf(l interfaces.Level, format string, args ...any) {
+	r := record.NewLogRecord(cl.name, record.LogLevelInt(l.Int()), format, args...)
 	cl.sendRecord(r)
 }
 
