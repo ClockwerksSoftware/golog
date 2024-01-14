@@ -1,0 +1,10 @@
+issues:
+  exclude-rules:
+    # b/c S1005 yields a bad result
+    - linters:
+      - gosimple
+      text: "S1005:"
+    # b/c S1033 yields a bad result
+    - linters:
+      - gosimple
+      text: "S1033:"
